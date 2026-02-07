@@ -12,3 +12,8 @@ jee.bz {
         reverse_proxy localhost:5000
     }
 }
+
+# Uptime Kuma status page (update IP to match your uptime-kuma container)
+status.jee.bz {
+    reverse_proxy 192.168.0.120:3001
+}
