@@ -531,6 +531,7 @@ HTML_TEMPLATE = """
             
             <div class="footer">
                 Request access: <a href="mailto:mc@flyingspark.eu">mc@flyingspark.eu</a>
+                <span style="margin-left: 15px; opacity: 0.3;"><a href="https://github.com/gnutgnut/jee.bz" style="color: #666;">src</a></span>
             </div>
         </div>
         

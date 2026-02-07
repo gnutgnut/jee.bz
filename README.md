@@ -1,4 +1,8 @@
-# Minecraft Fabric Server on Proxmox
+<p align="center">
+  <img src="jee.bz.png" alt="jee.bz" width="200">
+</p>
+
+# jee.bz - Minecraft Server Infrastructure
 
 High-performance Minecraft Fabric server running in Proxmox LXC container with web management, automated backups, and monitoring.
 
