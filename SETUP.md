@@ -170,7 +170,64 @@ chmod 600 /opt/webapp/.ssh/id_ed25519
 cat /opt/webapp/.ssh/id_ed25519.pub
 ```
 
-## 4. Router Configuration
+## 4. Uptime Kuma Container (102)
+
+### Create Container
+```bash
+pct create 102 local:vztmpl/debian-12-standard_12.12-1_amd64.tar.zst \
+    --hostname uptime-kuma \
+    --memory 512 \
+    --cores 1 \
+    --rootfs local-lvm:4 \
+    --net0 name=eth0,bridge=vmbr0,ip=dhcp \
+    --unprivileged 1 \
+    --features nesting=1 \
+    --onboot 1
+
+pct start 102
+```
+
+### Inside Container - Install Uptime Kuma
+```bash
+pct enter 102
+
+# Run the setup script
+./uptime-kuma-setup.sh
+
+# Or manually:
+apt-get update && apt-get install -y ca-certificates curl gnupg git
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt-get install -y nodejs
+cd /opt && git clone https://github.com/louislam/uptime-kuma.git
+cd uptime-kuma && npm run setup
+```
+
+### Configure Monitors
+Access http://<container-ip>:3001 and set up:
+- TCP monitor for Minecraft (192.168.0.165:25565)
+- HTTP monitor for website (https://jee.bz)
+- HTTP monitor for BlueMap (https://jee.bz/map/)
+
+### DNS Setup
+Add CNAME record: `status.jee.bz` -> `jee.bz`
+
+## 5. BlueMap Configuration
+
+BlueMap is installed as a Fabric mod. After first server start:
+
+```bash
+pct exec 100 -- bash -c '
+  # Accept resource download
+  sed -i "s/accept-download: false/accept-download: true/" /opt/minecraft/config/bluemap/core.conf
+
+  # Reload BlueMap via RCON
+  python3 /opt/minecraft/rcon.py "bluemap reload"
+'
+```
+
+BlueMap web interface runs on port 8100, proxied via Caddy at /map/
+
+## 6. Router Configuration
 
 Configure port forwarding on your router:
 - 22 (or custom SSH port) -> Proxmox host
@@ -197,27 +254,35 @@ pct exec 100 -- systemctl start minecraft
 
 ```
 .
-├── CLAUDE.md              # Project documentation
-├── SETUP.md               # This file
-├── connect.sh             # SSH connection helper
-├── jee.bz.png             # Site logo
+├── CLAUDE.md                 # Project documentation
+├── SETUP.md                  # This file
+├── connect.sh                # SSH connection helper
+├── connect.conf.example      # SSH config template
+├── jee.bz.png                # Site logo
+├── minecraft-setup.sh        # Automated MC server setup
+├── webapp-setup.sh           # Automated webapp setup
+├── uptime-kuma-setup.sh      # Automated Uptime Kuma setup
 ├── minecraft/
-│   ├── server.properties  # MC server config
-│   ├── start.sh           # JVM startup script
-│   ├── backup.sh          # Daily backup script
-│   ├── render_map.sh      # Map renderer with overlays
-│   ├── minecraft.service  # Systemd unit
-│   ├── whitelist.json     # Whitelisted players
-│   ├── ops.json           # Server operators
-│   ├── cron-backup        # Backup cron job
-│   └── cron-render-map    # Map render cron job
+│   ├── server.properties     # MC server config
+│   ├── start.sh              # JVM startup script
+│   ├── backup.sh             # Daily backup script
+│   ├── rcon.py               # RCON client for server commands
+│   ├── render_map.sh         # Top-down map renderer
+│   ├── render_isometric.sh   # Chunky 3D isometric renderer
+│   ├── render_background.sh  # Cinematic background renderer
+│   ├── minecraft.service     # Systemd unit
+│   ├── whitelist.json        # Whitelisted players
+│   ├── ops.json              # Server operators
+│   ├── cron-backup           # Backup cron job
+│   └── cron-render-map       # Map render cron job
 ├── webapp/
-│   ├── app.py             # Flask application
-│   ├── Caddyfile          # Caddy reverse proxy config
-│   └── webapp.service     # Systemd unit
+│   ├── app.py                # Flask application
+│   ├── Caddyfile             # Caddy config (main site, BlueMap, Uptime Kuma)
+│   └── webapp.service        # Systemd unit
 └── proxmox-host/
-    ├── iptables-rules.v4  # NAT/forwarding rules
-    ├── jail.local         # fail2ban config
-    ├── lxc-100.conf       # MC container config
-    └── lxc-101.conf       # Web container config
+    ├── iptables-rules.v4     # NAT/forwarding rules
+    ├── jail.local            # fail2ban config
+    ├── lxc-100.conf          # MC container config
+    ├── lxc-101.conf          # Web container config
+    └── lxc-102.conf          # Uptime Kuma container config
 ```

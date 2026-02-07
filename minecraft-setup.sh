@@ -122,6 +122,26 @@ download_mod "H8CaAYZC" "Starlight"
 download_mod "uXXizFIs" "FerriteCore"
 download_mod "VSNURh3q" "C2ME"
 download_mod "P7dR8mSH" "Fabric API"
+download_mod "swbUV1cr" "BlueMap"
+
+# Install Chunky for isometric renders
+echo "Installing Chunky renderer..."
+mkdir -p /opt/chunky
+cd /opt/chunky
+curl -L -o ChunkyLauncher.jar "https://chunky-dev.github.io/docs/download/ChunkyLauncher.jar"
+java -Dchunky.home=/opt/chunky -jar ChunkyLauncher.jar --update
+java -Dchunky.home=/opt/chunky -jar ChunkyLauncher.jar -download-mc ${MINECRAFT_VERSION}
+mkdir -p scenes
+cd ${MINECRAFT_DIR}
+
+# Install unmined-cli for top-down map
+echo "Installing unmined-cli..."
+curl -L -o /tmp/unmined-cli.tar.gz "https://unmined.blob.core.windows.net/files/unmined-cli_0.19.54-dev_linux-x64.tar.gz"
+tar -xzf /tmp/unmined-cli.tar.gz -C ${MINECRAFT_DIR}
+rm /tmp/unmined-cli.tar.gz
+
+# Install ImageMagick for image processing
+apt-get install -y imagemagick
 
 # Create optimized server.properties
 echo "Creating server.properties..."
