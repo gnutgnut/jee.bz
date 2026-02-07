@@ -422,11 +422,39 @@ pct set 100 -memory 20480 -cores 12
 
 ## Network Configuration
 
-### Port Forwarding (if behind router)
+### DNS Setup
 
-Forward these ports to your Proxmox server IP:
-- `25565` (TCP) - Minecraft
-- `24444` (TCP) - Web panel (optional)
+Required DNS records (e.g., FreeDNS, Cloudflare):
+
+| Record | Type | Value |
+|--------|------|-------|
+| `jee.bz` | A | Your public IP |
+| `status.jee.bz` | CNAME | `jee.bz` |
+
+**Dynamic DNS**: If your IP changes, set up DynDNS on your router pointing to the main A record. Use CNAME for subdomains so they follow automatically.
+
+### Router Port Forwarding
+
+Forward these ports to your Proxmox host:
+
+| Port | Protocol | Destination | Service |
+|------|----------|-------------|---------|
+| 22 (or custom) | TCP | Proxmox host | SSH |
+| 80 | TCP | Web container (101) | HTTP (Caddy redirects to HTTPS) |
+| 443 | TCP | Web container (101) | HTTPS (main site, BlueMap, status) |
+| 25565 | TCP | MC container (100) | Minecraft |
+
+**Note**: Ports 8100 (BlueMap), 3001 (Uptime Kuma), 25575 (RCON) stay internal - accessed via Caddy reverse proxy or SSH tunnel.
+
+### DHCP Reservations
+
+Set static DHCP bindings on your router for consistent IPs:
+
+| Container | MAC Address | IP |
+|-----------|-------------|-----|
+| minecraft (100) | Get from `pct config 100 \| grep net` | 192.168.0.165 |
+| webserver (101) | Get from `pct config 101 \| grep net` | 192.168.0.166 |
+| uptime-kuma (102) | Get from `pct config 102 \| grep net` | 192.168.0.120 |
 
 ### Static IP Configuration
 
