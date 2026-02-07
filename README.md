@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="jee.bz.png" alt="jee.bz" width="200">
+  <a href="https://jee.bz"><img src="jee.bz.png" alt="jee.bz" width="200"></a>
 </p>
 
 # jee.bz - Minecraft Server Infrastructure
