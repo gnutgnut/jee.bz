@@ -1,3 +1,14 @@
 jee.bz {
-    reverse_proxy localhost:5000
+    # Redirect /map to /map/ for BlueMap
+    redir /map /map/ permanent
+
+    # BlueMap 3D map (update IP to match your MC container)
+    handle_path /map/* {
+        reverse_proxy 192.168.0.165:8100
+    }
+
+    # Main webapp
+    handle {
+        reverse_proxy localhost:5000
+    }
 }
