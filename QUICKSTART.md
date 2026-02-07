@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Proxmox server accessible at `jee.bz:8006`
+- Proxmox server accessible (local network or SSH tunnel)
 - SSH access (password or key-based)
 - SSH and web portal ports open (22, 8006)
 
@@ -118,7 +118,7 @@ systemctl start minecraft
 bash /root/pterodactyl-setup.sh
 ```
 
-Access at: `http://jee.bz:24444`
+Access via SSH tunnel: `ssh -L 24444:localhost:24444 root@<proxmox-ip>` then open `http://localhost:24444`
 - Username: `admin`
 - Password: `123456` (CHANGE IMMEDIATELY!)
 
@@ -265,8 +265,8 @@ tail -f /opt/minecraft/logs/latest.log  # Minecraft logs
 | Service | Address | Credentials |
 |---------|---------|-------------|
 | Minecraft | `jee.bz:25565` | - |
-| MCSManager | `http://jee.bz:24444` | admin/123456 |
-| Proxmox Web | `https://jee.bz:8006` | Your Proxmox creds |
+| MCSManager | `localhost:24444` (via SSH tunnel) | admin/123456 |
+| Proxmox Web | `localhost:8006` (via SSH tunnel) | Your Proxmox creds |
 
 ## Need Help?
 
