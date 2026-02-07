@@ -18,6 +18,31 @@ High-performance Minecraft Fabric server running in Proxmox LXC container with w
 
 ## Prerequisites
 
+### Proxmox VE Setup
+
+1. **Install Proxmox VE** on a dedicated server or bare metal machine
+   - Download ISO from [proxmox.com/downloads](https://www.proxmox.com/en/downloads)
+   - Boot and follow installer (use ZFS for storage if possible)
+   - Access web UI at `https://<your-ip>:8006`
+
+2. **Post-install configuration**
+   ```bash
+   # Disable enterprise repo (unless you have subscription)
+   sed -i 's/^deb/#deb/' /etc/apt/sources.list.d/pve-enterprise.list
+
+   # Add no-subscription repo
+   echo "deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription" > /etc/apt/sources.list.d/pve-no-sub.list
+
+   # Update
+   apt update && apt dist-upgrade -y
+   ```
+
+3. **Download CT template**
+   - Datacenter → Storage → CT Templates → Templates
+   - Download `debian-12-standard`
+
+4. **Configure networking** - ensure your server has a static IP or DHCP reservation
+
 ### SSH Key Setup (Recommended)
 
 Set up SSH key-based authentication for passwordless access:
