@@ -4,7 +4,7 @@
 
 set -e
 
-PROXMOX_HOST="proxmox.cbmcra.website"
+PROXMOX_HOST="jee.bz"
 PROXMOX_USER="root"
 PROXMOX_PORT="22"
 SSH_KEY_PATH="$HOME/.ssh/id_ed25519"

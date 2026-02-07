@@ -4,7 +4,7 @@
 
 set -e
 
-PROXMOX_HOST="proxmox.cbmcra.website"
+PROXMOX_HOST="jee.bz"
 PROXMOX_USER="root"
 CTID=100
 

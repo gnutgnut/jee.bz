@@ -39,7 +39,7 @@ When prompted:
 
 **Method A: Using ssh-copy-id (Linux/Mac/WSL/Git Bash)**
 ```bash
-ssh-copy-id root@proxmox.cbmcra.website
+ssh-copy-id root@jee.bz
 ```
 
 **Method B: Manual (Windows PowerShell or if ssh-copy-id not available)**
@@ -48,7 +48,7 @@ ssh-copy-id root@proxmox.cbmcra.website
 Get-Content $env:USERPROFILE\.ssh\id_ed25519.pub
 
 # SSH to Proxmox and paste the key
-ssh root@proxmox.cbmcra.website
+ssh root@jee.bz
 
 # On Proxmox, run:
 mkdir -p ~/.ssh
@@ -61,13 +61,13 @@ exit
 
 **Method C: One-liner (Git Bash/WSL)**
 ```bash
-cat ~/.ssh/id_ed25519.pub | ssh root@proxmox.cbmcra.website "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+cat ~/.ssh/id_ed25519.pub | ssh root@jee.bz "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 ```
 
 #### 3. Test Connection
 
 ```bash
-ssh root@proxmox.cbmcra.website
+ssh root@jee.bz
 ```
 
 You should connect without entering a password!
@@ -83,7 +83,7 @@ Add this to `~/.ssh/config` for easier access:
 **Content:**
 ```
 Host proxmox
-    HostName proxmox.cbmcra.website
+    HostName jee.bz
     User root
     Port 22
     IdentityFile ~/.ssh/id_ed25519
@@ -124,12 +124,12 @@ chmod 644 ~/.ssh/id_ed25519.pub
 
 2. Verify key is in authorized_keys on Proxmox:
 ```bash
-ssh root@proxmox.cbmcra.website "cat ~/.ssh/authorized_keys"
+ssh root@jee.bz "cat ~/.ssh/authorized_keys"
 ```
 
 3. Check Proxmox SSH config allows key authentication:
 ```bash
-ssh root@proxmox.cbmcra.website "grep -E 'PubkeyAuthentication|PasswordAuthentication' /etc/ssh/sshd_config"
+ssh root@jee.bz "grep -E 'PubkeyAuthentication|PasswordAuthentication' /etc/ssh/sshd_config"
 ```
 
 Should show:
@@ -141,8 +141,8 @@ PubkeyAuthentication yes
 
 First time connecting to a new host:
 ```bash
-ssh-keygen -R proxmox.cbmcra.website
-ssh root@proxmox.cbmcra.website
+ssh-keygen -R jee.bz
+ssh root@jee.bz
 # Type 'yes' when prompted
 ```
 
@@ -227,7 +227,7 @@ ssh-keygen -t ed25519 -f ~/.ssh/proxmox_minecraft -C "minecraft-management"
 
 # Add to SSH config
 Host proxmox-minecraft
-    HostName proxmox.cbmcra.website
+    HostName jee.bz
     User root
     IdentityFile ~/.ssh/proxmox_minecraft
 ```

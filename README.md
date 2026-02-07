@@ -37,10 +37,10 @@ See [SSH-SETUP.md](SSH-SETUP.md) for detailed instructions.
 
 # OR manual deployment:
 # Copy deployment script to Proxmox
-scp deploy-container.sh root@proxmox.cbmcra.website:/root/
+scp deploy-container.sh root@jee.bz:/root/
 
 # SSH into Proxmox
-ssh root@proxmox.cbmcra.website
+ssh root@jee.bz
 
 # Run deployment (review script first and adjust CTID/storage if needed)
 bash /root/deploy-container.sh
@@ -439,7 +439,7 @@ All scripts are in `/root/` of the container:
 
 ---
 
-**Server**: proxmox.cbmcra.website:8006
+**Server**: jee.bz:8006
 **Container ID**: 100
 **Minecraft Port**: 25565
 **Management Panel**: http://YOUR_IP:24444

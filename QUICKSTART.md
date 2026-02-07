@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Proxmox server accessible at `proxmox.cbmcra.website:8006`
+- Proxmox server accessible at `jee.bz:8006`
 - SSH access (password or key-based)
 - SSH and web portal ports open (22, 8006)
 
@@ -89,7 +89,7 @@ When prompted, type `y` to start the server immediately.
 
 In Minecraft client:
 - Click "Multiplayer"
-- Add Server: `proxmox.cbmcra.website:25565`
+- Add Server: `jee.bz:25565`
 - Join and play!
 
 ## Post-Installation
@@ -118,7 +118,7 @@ systemctl start minecraft
 bash /root/pterodactyl-setup.sh
 ```
 
-Access at: `http://proxmox.cbmcra.website:24444`
+Access at: `http://jee.bz:24444`
 - Username: `admin`
 - Password: `123456` (CHANGE IMMEDIATELY!)
 
@@ -264,9 +264,9 @@ tail -f /opt/minecraft/logs/latest.log  # Minecraft logs
 
 | Service | Address | Credentials |
 |---------|---------|-------------|
-| Minecraft | `proxmox.cbmcra.website:25565` | - |
-| MCSManager | `http://proxmox.cbmcra.website:24444` | admin/123456 |
-| Proxmox Web | `https://proxmox.cbmcra.website:8006` | Your Proxmox creds |
+| Minecraft | `jee.bz:25565` | - |
+| MCSManager | `http://jee.bz:24444` | admin/123456 |
+| Proxmox Web | `https://jee.bz:8006` | Your Proxmox creds |
 
 ## Need Help?
 

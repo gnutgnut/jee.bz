@@ -2,7 +2,7 @@
 # Port Testing and Verification Script
 # Run this to verify all ports are accessible
 
-PROXMOX_HOST="proxmox.cbmcra.website"
+PROXMOX_HOST="jee.bz"
 CONTAINER_IP=""  # Will be auto-detected or set manually
 
 echo "============================================"
