@@ -1,0 +1,6 @@
+# Proxmox connection settings
+# Copy this to connect.conf and fill in your values
+PROXMOX_HOST="your.server.ip"
+PROXMOX_USER="root"
+PROXMOX_PORT="22"
+SSH_KEY="$HOME/.ssh/id_ed25519"

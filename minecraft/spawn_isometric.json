@@ -1,0 +1,57 @@
+{
+  "sdfVersion": 9,
+  "name": "spawn_isometric",
+  "width": 800,
+  "height": 600,
+  "yClipMin": 0,
+  "yClipMax": 256,
+  "yMin": -64,
+  "yMax": 320,
+  "exposure": 1.0,
+  "postprocess": "GAMMA",
+  "outputMode": "PNG",
+  "renderTime": 0,
+  "spp": 0,
+  "sppTarget": 100,
+  "rayDepth": 5,
+  "pathTrace": true,
+  "emittersEnabled": true,
+  "sunEnabled": true,
+  "sunIntensity": 1.25,
+  "sunAzimuth": 1.2217304763960306,
+  "sunAltitude": 1.0471975511965976,
+  "waterOpacity": 0.42,
+  "waterVisibility": 9.0,
+  "useCustomWaterColor": false,
+  "fogEnabled": false,
+  "biomeColorsEnabled": true,
+  "transparentSky": false,
+  "waterPlaneEnabled": false,
+  "sky": {
+    "skyYaw": 0.0,
+    "skyMirrored": true,
+    "skyLight": 1.0,
+    "mode": "SIMULATED",
+    "horizonOffset": 0.0
+  },
+  "camera": {
+    "position": {
+      "x": -80.0,
+      "y": 150.0,
+      "z": -250.0
+    },
+    "orientation": {
+      "roll": 0.0,
+      "pitch": -0.6154797086703874,
+      "yaw": -2.356194490192345
+    },
+    "projectionMode": "PARALLEL",
+    "fov": 100.0,
+    "dof": "Infinity"
+  },
+  "world": {
+    "path": "/opt/minecraft/world",
+    "dimension": 0
+  },
+  "chunkList": []
+}

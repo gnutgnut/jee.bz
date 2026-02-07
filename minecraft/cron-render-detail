@@ -1,0 +1,2 @@
+# Render isometric 3D map hourly at minute 28 (uses Chunky path tracer)
+28 * * * * root /opt/minecraft/render_isometric.sh

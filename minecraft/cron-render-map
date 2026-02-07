@@ -1,0 +1,1 @@
+27 * * * * root /opt/minecraft/render_map.sh

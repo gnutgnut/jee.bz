@@ -1,0 +1,18 @@
+# Sensitive files
+*.pem
+*.key
+connect.conf
+*.secret
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+
+# World data (too large for git)
+world/
+
+# Python
+__pycache__/
+*.pyc
+venv/

@@ -1,0 +1,1 @@
+0 5 * * 0 root /opt/minecraft/offsite-backup.sh

@@ -1,0 +1,13 @@
+[Unit]
+Description=Flask Web Application
+After=network.target
+
+[Service]
+User=webapp
+WorkingDirectory=/opt/webapp
+Environment="PATH=/opt/webapp/venv/bin"
+ExecStart=/opt/webapp/venv/bin/gunicorn -w 2 -b 127.0.0.1:5000 --timeout 600 app:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
