@@ -49,6 +49,64 @@
 └── world/
 ```
 
+## Spigot Minecraft Server (Container 103)
+- **Container ID:** 103
+- **Hostname:** minecraft-spigot
+- **Container IP:** 192.168.0.166 (static DHCP binding - TODO: configure)
+- **Resources:** 12 cores, 24GB RAM (20GB JVM heap), 100GB disk
+- **Game Version:** Minecraft 1.21.4 with Spigot
+- **Game Port:** 25565 (shared with Fabric via iptables switching)
+- **RCON Port:** 25575 (internal only)
+- **MOTD:** §6jee.bz §r- Spigot 1.21.4
+- **World Seed:** 7749012223296673 (same as Fabric)
+- **onboot:** OFF by default (only one MC container should auto-start)
+
+### Switching Between Fabric and Spigot
+Only one MC container runs at a time. The switcher handles stopping, iptables, and starting:
+```bash
+# Check which is running
+./connect.sh "bash /root/switch-mc.sh status"
+
+# Switch to Spigot
+./connect.sh "bash /root/switch-mc.sh spigot"
+
+# Switch back to Fabric
+./connect.sh "bash /root/switch-mc.sh fabric"
+```
+
+The switcher:
+1. Gracefully stops the active MC container
+2. Updates iptables DNAT rules (port 25565 -> new container IP)
+3. Starts the target container
+4. Updates onboot flags so the correct one starts on reboot
+
+### Spigot Management
+Same interface as Fabric - all commands are identical, just different CTID:
+```bash
+./connect.sh "pct exec 103 -- systemctl status minecraft"
+./connect.sh "pct exec 103 -- systemctl restart minecraft"
+./connect.sh "pct exec 103 -- journalctl -u minecraft -f"
+./connect.sh "pct enter 103"
+
+# Server files (same layout as Fabric)
+/opt/minecraft/
+├── server.properties
+├── whitelist.json
+├── ops.json
+├── plugins/          # Spigot uses plugins/ instead of mods/
+├── spigot.jar
+└── world/
+```
+
+### Key Differences from Fabric
+- **Jar:** `spigot.jar` instead of `fabric-server-launch.jar`
+- **Extensions:** `plugins/` directory instead of `mods/`
+- **Plugin ecosystem:** Bukkit/Spigot plugins (e.g. EssentialsX, WorldEdit)
+- **Bedrock support:** GeyserMC + Floodgate plugins (port 19132/UDP)
+- **Bedrock players:** Can join without a Java account (Floodgate), usernames prefixed with `.`
+- **Render tools:** Same unmined + Chunky setup, website works unchanged
+- **Port forwarding:** switch-mc.sh adds 19132/UDP iptables rule when switching to Spigot
+
 ## Web Server (Container 101)
 - **Container ID:** 101
 - **Hostname:** webserver
