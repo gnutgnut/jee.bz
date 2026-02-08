@@ -10,6 +10,9 @@ app = Flask(__name__)
 MC_HOST = "192.168.0.165"
 MC_PORT = 25565
 
+# Tip jar - replace with your Monero address
+XMR_ADDRESS = "YOUR_MONERO_ADDRESS_HERE"
+
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
@@ -485,6 +488,71 @@ HTML_TEMPLATE = """
         .reset-btn {
             font-size: 18px;
         }
+
+        .tip-jar .tip-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tip-jar .tip-header h3 {
+            font-family: "Press Start 2P", monospace;
+            font-size: 0.7em;
+            color: #fff;
+        }
+
+        .tip-jar .tip-header .tip-icon {
+            font-size: 1.2em;
+            opacity: 0.7;
+        }
+
+        .tip-jar .tip-blurb {
+            font-size: 0.8em;
+            color: #888;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .tip-jar .xmr-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .tip-jar .xmr-box img {
+            width: 80px;
+            height: 80px;
+            border-radius: 6px;
+            image-rendering: pixelated;
+        }
+
+        .tip-jar .xmr-addr {
+            font-family: monospace;
+            font-size: 0.65em;
+            color: #aaa;
+            word-break: break-all;
+            line-height: 1.4;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .tip-jar .xmr-addr:hover {
+            color: #22c55e;
+        }
+
+        .tip-jar .xmr-label {
+            font-size: 0.65em;
+            color: #555;
+            margin-top: 8px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -590,8 +658,28 @@ HTML_TEMPLATE = """
             </div>
         </div>
         {% endif %}
+
+        {% if xmr_address %}
+        <div class="card tip-jar">
+            <div class="tip-header">
+                <span class="tip-icon">&#9880;</span>
+                <h3>Keep the lights on</h3>
+            </div>
+            <div class="tip-blurb">
+                Server costs come out of pocket. If you enjoy playing, a small tip helps cover hosting.
+                No pressure, no perks — just vibes.
+            </div>
+            <div class="xmr-box">
+                <img src="/api/qr" alt="XMR QR">
+                <div>
+                    <div class="xmr-addr" onclick="navigator.clipboard.writeText('{{ xmr_address }}'); this.style.color='#22c55e'; this.textContent='Copied!'; setTimeout(() => { this.style.color=''; this.textContent='{{ xmr_address }}'; }, 1500)" title="Click to copy">{{ xmr_address }}</div>
+                    <div class="xmr-label">Monero (XMR) · click to copy</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    
+
     <script>
         let lastOnline = {{ 'true' if mc.online else 'false' }};
         
@@ -876,7 +964,8 @@ def index():
     cache_bust = int(os.path.getmtime("/opt/webapp/static/spawn_map.png")) if map_exists else 0
     detail_exists = os.path.exists("/opt/webapp/static/spawn_detail.png")
     cache_bust_detail = int(os.path.getmtime("/opt/webapp/static/spawn_detail.png")) if detail_exists else 0
-    return render_template_string(HTML_TEMPLATE, mc=mc, map_exists=map_exists, cache_bust=cache_bust, detail_exists=detail_exists, cache_bust_detail=cache_bust_detail)
+    xmr = XMR_ADDRESS if XMR_ADDRESS != "YOUR_MONERO_ADDRESS_HERE" else None
+    return render_template_string(HTML_TEMPLATE, mc=mc, map_exists=map_exists, cache_bust=cache_bust, detail_exists=detail_exists, cache_bust_detail=cache_bust_detail, xmr_address=xmr)
 
 @app.route("/static/<path:filename>")
 def static_files(filename):
@@ -930,6 +1019,28 @@ def render_detail():
         return jsonify({"success": False, "message": "Render timed out"}), 500
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+
+@app.route("/api/qr")
+def qr_code():
+    try:
+        import qrcode
+        import io
+        from flask import send_file
+        qr = qrcode.QRCode(version=1, box_size=4, border=2,
+                            error_correction=qrcode.constants.ERROR_CORRECT_L)
+        qr.add_data("monero:" + XMR_ADDRESS)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="#22c55e", back_color="#0a0a0f")
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        buf.seek(0)
+        return send_file(buf, mimetype="image/png",
+                         max_age=86400)
+    except ImportError:
+        # qrcode not installed - return a 1x1 transparent pixel
+        import base64
+        pixel = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==")
+        return pixel, 200, {"Content-Type": "image/png"}
 
 @app.route("/api/mc")
 def api_mc():
